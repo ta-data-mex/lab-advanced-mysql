@@ -36,10 +36,6 @@ group by TITLE_ID, AUTHOR_ID
 ORDER BY AGGREGATED_ROYALTY DESC; 
 
 /*##Paso 3: Calcula los beneficios totales de cada autor.####*/
-
-SELECT step2.au_id, SUM(step2.Total + tit2.advance) AS TOTALROY
-FROM (
-
 SELECT 
 AUTHOR_ID,
 TITLE_ID,
@@ -59,16 +55,8 @@ on titles.title_id = sales.title_id
 order by SALES_ROYALTY desc
 ) summary
 group by TITLE_ID, AUTHOR_ID
-ORDER BY AGGREGATED_ROYALTY DESC; 
-
-
-
-
-) step2
-INNER JOIN publications.titles tit2
-ON step2.title_id = tit2.title_id
-GROUP BY step2.au_id
-ORDER BY TOTALROY DESC;
+ORDER BY AGGREGATED_ROYALTY DESC
+LIMIT 3;
 
 
 
