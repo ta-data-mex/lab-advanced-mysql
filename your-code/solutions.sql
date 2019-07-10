@@ -132,3 +132,40 @@ from(select Title as Title_ID, Author as Author_ID, Royalty as Royalty_Sales
 	)step2
 
 
+/* OR ONE CAN ALSO MAKE OTHER TABLES FOR CHALLENGE 2 AND 3: */
+
+# Challenge 2 and 3. 
+
+select authors.au_id
+from publications.authors authors;
+
+create temporary table
+publications.all_information
+select titleauthor.au_id, titleauthor.title_id, royaltyper, qty, advance, price, royalty
+from (select sales.title_id, qty, advance, price, royalty
+from publications.sales sales
+inner join publications.titles titles
+on titles.title_id = sales.title_id) intermediate
+inner join publications.titleauthor titleauthor
+on titleauthor.title_id = intermediate.title_id
+inner join publications.authors authors
+on titleauthor.au_id = authors.au_id
+group by titleauthor.au_id;
+
+create temporary table
+publications.helper1
+select title_id, au_id, (price*qty*royalty/100)*royaltyper/100 as royalty_sales
+from publications.all_information;
+
+create temporary table
+publications.helper_advances
+select title_id, au_id, (advance)*royaltyper/100 as royalty_advances
+from publications.all_information;
+
+create table publications.Profit
+select advancest.title_id, advancest.au_id, royalty_sales+royalty_advances as Profit
+from publications.helper1 helper1
+inner join publications.helper_advances advancest
+on advancest.title_id = helper1.title_id;
+
+select * from publications.Profit
