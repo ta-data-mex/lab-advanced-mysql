@@ -1,3 +1,4 @@
+--no lo habia subido
 -- Step 1 si funciona
 use publications;
 select titles.title_id, 
